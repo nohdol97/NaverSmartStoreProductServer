@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from product import get_requested_products
+from manageProduct import get_requested_products
 from proxy import get_shuffled_proxies
 from scheduler import start_scheduler
 

@@ -1,7 +1,7 @@
 import schedule
 import time
 from threading import Thread
-from product import get_product
+from manageProduct import get_product
 
 def run_scheduler():
     while True:
