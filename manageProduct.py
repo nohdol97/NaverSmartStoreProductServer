@@ -91,9 +91,9 @@ def get_requested_products():
         print(f"Result: {result}")
 
         if not result:
-            return {"data": None}
+            return {"data": []}
         else:
             return {"data": result}
     except Exception as e:
         print(f"Error: {e}")
-        return {"data": None}
+        return {"data": []}
