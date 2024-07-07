@@ -1,2 +1,5 @@
 *.pyc
 __pycache__/
+data.xlsx
+product.txt
+proxyIp.txt
