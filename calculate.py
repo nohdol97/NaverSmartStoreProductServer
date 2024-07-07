@@ -15,12 +15,12 @@ def get_filtered_data():
     # 컬럼명을 이해하기 쉽게 영어로 변경
     df.columns = ['Store Name', 'Main Keyword', 'Product URL', 'MID', 'Source URL', 'Source MID', 'Start Date', 'End Date', 'Inbound Count', 'Note']
 
-    # 한국 시간으로 오늘 날짜와 내일 날짜 계산
-    today_korea = datetime.now() + timedelta(hours=9)
-    tomorrow_korea = today_korea + timedelta(days=1)
+    # 오늘 날짜와 내일 날짜 계산
+    today = datetime.now()
+    tomorrow = today + timedelta(days=1)
 
     # 내일 날짜가 시작일보다 크고 종료일보다 작거나 같은 경우 필터링
-    filtered_df = df[(df['Start Date'] < tomorrow_korea) & (df['End Date'] >= tomorrow_korea)]
+    filtered_df = df[(df['Start Date'] < tomorrow) & (df['End Date'] >= tomorrow)]
 
     return filtered_df
 
