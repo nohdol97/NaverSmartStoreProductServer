@@ -1,10 +1,6 @@
 import pandas as pd
 from datetime import datetime, timedelta
-import os
-
-import pandas as pd
-from datetime import datetime, timedelta
-import os
+import os, random
 
 def get_product():
     # 현재 작업 디렉토리 경로 가져오기
@@ -58,30 +54,29 @@ def get_requested_products():
                 mid, sub_mid, keyword, count = parts
                 products.append([mid, sub_mid, keyword, int(count)])
         
-        high_priority = [p for p in products if p[-1] >= 1000]
-        low_priority = [p for p in products if p[-1] < 1000]
-
+        high_priority = [p for p in products if p[-1] >= 250]
+        
         result = []
 
-        # 1000 이상인 항목 처리
-        for product in high_priority:
-            if product[-1] >= 1000:
-                result.append(product[:-1] + [1000])
-                product[-1] -= 1000
-                break
-
-        # 1000 이하인 항목 처리
-        if not result:
-            low_priority = sorted(low_priority, key=lambda x: x[-1], reverse=True)
-            count = 0
-            for product in low_priority:
-                if count < 3 and product[-1] > 0:
-                    take_amount = min(250, product[-1])
-                    result.append(product[:-1] + [take_amount])
-                    product[-1] -= take_amount
-                    count += 1
-                if count >= 3:
-                    break
+        if len(high_priority) >= 3:
+            selected_products = random.sample(high_priority, 3)
+            for product in selected_products:
+                result.append(product[:-1] + [250])
+                product[-1] -= 250
+        else:
+            total_sum = sum(p[-1] for p in high_priority)
+            if total_sum >= 750:
+                count = 0
+                for product in high_priority:
+                    if count < 750:
+                        take_amount = min(750 - count, product[-1])
+                        result.append(product[:-1] + [take_amount])
+                        product[-1] -= take_amount
+                        count += take_amount
+            else:
+                for product in high_priority:
+                    result.append(product[:-1] + [product[-1]])
+                    product[-1] = 0
 
         # product.txt 업데이트
         with open(output_file, 'w', encoding='utf-8') as file:

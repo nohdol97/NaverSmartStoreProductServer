@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 import os
 
@@ -25,26 +26,8 @@ def get_filtered_data():
     return filtered_df
 
 def calculate_requests(df):
-    requests_count = 0
-    
-    while df['Inbound Count'].sum() > 0:
-        if df[df['Inbound Count'] >= 1000].shape[0] > 0:
-            for index, row in df.iterrows():
-                if row['Inbound Count'] >= 1000:
-                    df.at[index, 'Inbound Count'] -= 1000
-                    requests_count += 1
-                    break
-        else:
-            count = 0
-            for index, row in df.iterrows():
-                if row['Inbound Count'] > 0:
-                    take_amount = min(250, row['Inbound Count'])
-                    df.at[index, 'Inbound Count'] -= take_amount
-                    count += 1
-                    if count == 3:
-                        requests_count += 1
-                        break
-
+    total_inbound_count = df['Inbound Count'].sum()
+    requests_count = int(np.ceil(total_inbound_count / 750))
     return requests_count
 
 def calculate():
