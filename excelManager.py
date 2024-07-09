@@ -49,7 +49,7 @@ def process_and_update_excel(existing_file_path, new_file_path):
         current_max_identifier += 1
         for col_index, cell in enumerate(row, start=2):  # 식별번호 열을 제외하고 시작
             new_cell = existing_ws.cell(row=current_max_identifier, column=col_index)
-            new_cell.value = cell.value
+            new_cell.value = cell.value if cell.value is not None else ""
             copy_cell_styles(cell, new_cell)
 
         # 식별번호 추가
