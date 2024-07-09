@@ -65,5 +65,9 @@ def process_and_update_excel(existing_file_path, new_file_path):
         # 식별번호 추가
         existing_ws.cell(row=current_max_identifier, column=1).value = current_max_identifier
 
+    # 디버깅을 위한 데이터 확인
+    for row in existing_ws.iter_rows(values_only=True):
+        print(row)
+
     existing_wb.save(existing_file_path)
     return True, "파일이 성공적으로 업로드되었습니다."
