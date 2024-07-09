@@ -16,12 +16,12 @@ def upload_excel_to_firebase(file_path):
 
 def copy_cell_styles(source_cell, target_cell):
     if source_cell.has_style:
-        target_cell.font = source_cell.font
-        target_cell.border = source_cell.border
-        target_cell.fill = source_cell.fill
+        target_cell.font = source_cell.font.copy() if source_cell.font else None
+        target_cell.border = source_cell.border.copy() if source_cell.border else None
+        target_cell.fill = source_cell.fill.copy() if source_cell.fill else None
         target_cell.number_format = source_cell.number_format
-        target_cell.protection = source_cell.protection
-        target_cell.alignment = source_cell.alignment
+        target_cell.protection = source_cell.protection.copy() if source_cell.protection else None
+        target_cell.alignment = source_cell.alignment.copy() if source_cell.alignment else None
 
 def process_and_update_excel(existing_file_path, new_file_path):
     # Load existing and new workbooks
