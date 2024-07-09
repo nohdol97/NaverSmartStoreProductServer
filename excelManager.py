@@ -61,21 +61,24 @@ def process_and_update_excel(existing_file_path, new_file_path):
             valid_existing_rows.append(row)
             current_max_identifier += 1
 
-    existing_ws.delete_rows(2, existing_ws.max_row)  # 모든 기존 데이터를 삭제하고 유효한 행만 추가
+    # 기존 데이터 초기화
+    existing_ws.delete_rows(2, existing_ws.max_row)
+
+    # 유효한 기존 행 추가
     for row_index, row in enumerate(valid_existing_rows, start=2):
         for col_index, cell in enumerate(row, start=1):
             new_cell = existing_ws.cell(row=row_index, column=col_index)
-            new_cell.value = cell.value
+            new_cell.value = cell.value if cell.value is not None else None
             copy_cell_styles(cell, new_cell)
 
     # 새로운 데이터 추가
     for row in new_ws.iter_rows(min_row=2, values_only=False):
-        if not is_valid_row(row) or row[0].value == 'Example':
+        if not is_valid_row(row):
             continue
         current_max_identifier += 1
         for col_index, cell in enumerate(row, start=1):  # 식별번호 열 추가
             new_cell = existing_ws.cell(row=current_max_identifier, column=col_index+1)
-            new_cell.value = cell.value if cell.value is not None else ""
+            new_cell.value = cell.value if cell.value is not None else None
             copy_cell_styles(cell, new_cell)
         
         print(f"Row {current_max_identifier} added with values {[cell.value for cell in row]}")
@@ -84,8 +87,10 @@ def process_and_update_excel(existing_file_path, new_file_path):
         existing_ws.cell(row=current_max_identifier, column=1).value = current_max_identifier
 
     # 디버깅을 위한 데이터 확인
+    print("Saving updated Excel file...")
     for row in existing_ws.iter_rows(values_only=True):
         print(row)
 
     existing_wb.save(existing_file_path)
+    print("Excel file saved successfully.")
     return True, "파일이 성공적으로 업로드되었습니다."
