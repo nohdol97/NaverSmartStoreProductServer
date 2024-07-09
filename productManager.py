@@ -99,5 +99,3 @@ def get_requested_products():
     except Exception as e:
         print(f"Error: {e}")
         return {"data": []}
-    
-get_product()
