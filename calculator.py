@@ -13,20 +13,23 @@ def get_filtered_data():
     # Excel 파일 읽기
     df = pd.read_excel(file_path)
 
-    # 컬럼명을 이해하기 쉽게 영어로 변경
-    df.columns = ['Store Name', 'Main Keyword', 'Product URL', 'MID', 'Source URL', 'Source MID', 'Start Date', 'End Date', 'Inbound Count', 'Note']
+    # 컬럼명을 이미지에 맞게 변경
+    df.columns = [
+        '식별번호', '총판', '대행사', '셀러', '메인 키워드', '서브 키워드', 
+        '상품 URL', 'MID값', '원부 URL', '원부 MID값', '시작일', '종료일', '유입수'
+    ]
 
     # 오늘 날짜와 내일 날짜 계산
     today = datetime.now()
     tomorrow = today + timedelta(days=1)
 
     # 내일 날짜가 시작일보다 크고 종료일보다 작거나 같은 경우 필터링
-    filtered_df = df[(df['Start Date'] < tomorrow) & (df['End Date'] >= tomorrow)]
+    filtered_df = df[(df['시작일'] < tomorrow) & (df['종료일'] >= tomorrow)]
 
     return filtered_df
 
 def calculate_requests(df):
-    total_inbound_count = df['Inbound Count'].sum()
+    total_inbound_count = df['유입수'].sum()
     requests_count = int(np.ceil(total_inbound_count / 750))
     return requests_count
 

@@ -13,23 +13,26 @@ def get_product():
     # Excel 파일 읽기
     df = pd.read_excel(file_path)
 
-    # 컬럼명을 이해하기 쉽게 영어로 변경
-    df.columns = ['Store Name', 'Main Keyword', 'Product URL', 'MID', 'Source URL', 'Source MID', 'Start Date', 'End Date', 'Inbound Count', 'Note']
+    # 컬럼명을 이미지에 맞게 변경
+    df.columns = [
+        '식별번호', '총판', '대행사', '셀러', '메인 키워드', '서브 키워드', 
+        '상품 URL', 'MID값', '원부 URL', '원부 MID값', '시작일', '종료일', '유입수'
+    ]
 
     # 오늘 날짜와 내일 날짜 계산
     today = datetime.now()
     tomorrow = today + timedelta(days=1)
 
     # 내일 날짜가 시작일보다 크고 종료일보다 작거나 같은 경우 필터링
-    filtered_df = df[(df['Start Date'] < tomorrow) & (df['End Date'] >= tomorrow)]
+    filtered_df = df[(df['시작일'] < tomorrow) & (df['종료일'] >= tomorrow)]
 
     # 필터링된 데이터를 지정된 형식으로 product.txt 파일에 작성
     with open(output_file, 'w', encoding='utf-8') as file:
         for index, row in filtered_df.iterrows():
-            if pd.notna(row['Source MID']):
-                line = f"{int(row['MID'])},{int(row['Source MID'])},{row['Main Keyword']},{int(row['Inbound Count'])}\n"
+            if pd.notna(row['원부 MID값']):
+                line = f"{int(row['MID값'])},{int(row['원부 MID값'])},{row['메인 키워드']},{int(row['유입수'])}\n"
             else:
-                line = f"{int(row['MID'])},{row['Main Keyword']},{int(row['Inbound Count'])}\n"
+                line = f"{int(row['MID값'])},{row['메인 키워드']},{int(row['유입수'])}\n"
             file.write(line)
 
     print(f"File created at: {output_file}")
@@ -96,3 +99,5 @@ def get_requested_products():
     except Exception as e:
         print(f"Error: {e}")
         return {"data": []}
+    
+get_product()
