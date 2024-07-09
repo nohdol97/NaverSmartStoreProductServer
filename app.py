@@ -26,42 +26,48 @@ def get_ip():
         return jsonify({"error": str(e)}), 500
     
 @app.route('/updateExcel', methods=['POST'])
-def upload_excel():
-    if 'file' not in request.files:
-        return jsonify({'message': 'No file part'}), 400
+def update_excel():
+    try:
+        if 'file' not in request.files:
+            return jsonify({'message': 'No file part'}), 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'message': 'No selected file'}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'message': 'No selected file'}), 400
 
-    if file and file.filename.endswith('.xlsx'):
-        existing_file_path = 'data.xlsx'
-        new_file_path = 'uploaded_data.xlsx'
+        if file and file.filename.endswith('.xlsx'):
+            existing_file_path = 'data.xlsx'
+            new_file_path = 'uploaded_data.xlsx'
 
-        # Download existing file from Firebase
-        excelManager.download_excel_from_firebase(existing_file_path)
-        
-        # Save uploaded file
-        file.save(new_file_path)
+            excelManager.download_excel_from_firebase(existing_file_path)
+            
+            try:
+                file.save(new_file_path)
+                # 파일 유효성 검사
+                excelManager.load_workbook(new_file_path)
+            except Exception as e:
+                if os.path.exists(new_file_path):
+                    os.remove(new_file_path)
+                return jsonify({'message': f'Invalid Excel file: {e}'}), 400
 
-        # Process and update the Excel file
-        success, message = excelManager.process_and_update_excel(existing_file_path, new_file_path)
+            success, message = excelManager.process_and_update_excel(existing_file_path, new_file_path)
 
-        if not success:
+            if not success:
+                os.remove(new_file_path)
+                os.remove(existing_file_path)
+                return jsonify({'message': message}), 400
+
+            excelManager.upload_excel_to_firebase(existing_file_path)
+
+            # Cleanup
             os.remove(new_file_path)
             os.remove(existing_file_path)
-            return jsonify({'message': message}), 400
 
-        # Upload updated file back to Firebase
-        excelManager.upload_excel_to_firebase(existing_file_path)
+            return jsonify({'message': message}), 200
 
-        # Cleanup
-        os.remove(new_file_path)
-        os.remove(existing_file_path)
-
-        return jsonify({'message': message}), 200
-
-    return jsonify({'message': 'Invalid file format'}), 400
+        return jsonify({'message': 'Invalid file format'}), 400
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
 
 if __name__ == '__main__':
     start_scheduler()

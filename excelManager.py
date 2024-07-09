@@ -30,14 +30,17 @@ def copy_cell_styles(source_cell, target_cell):
             target_cell.alignment = source_cell.alignment.copy()
 
 def process_and_update_excel(existing_file_path, new_file_path):
-    # Load existing and new workbooks
-    existing_wb = load_workbook(existing_file_path)
-    new_wb = load_workbook(new_file_path)
+    try:
+        # Load existing and new workbooks
+        existing_wb = load_workbook(existing_file_path)
+        new_wb = load_workbook(new_file_path)
+    except Exception as e:
+        return False, f"Error loading Excel files: {e}"
     
     existing_ws = existing_wb.active
     new_ws = new_wb.active
 
-    # 검증된 헤더 목록
+    # 검증된 헤더 목록 (식별번호 제거)
     expected_headers = ['총판', '대행사', '셀러', '메인 키워드', '서브 키워드', '상품 URL', 'MID값', '원부 URL', '원부 MID값', '시작일', '종료일', '유입수']
     
     # 헤더 검증
@@ -53,8 +56,9 @@ def process_and_update_excel(existing_file_path, new_file_path):
         if row[0].value == 'Example':
             continue
         current_max_identifier += 1
-        for col_index, cell in enumerate(row, start=2):  # 식별번호 열을 제외하고 시작
-            new_cell = existing_ws.cell(row=current_max_identifier, column=col_index)
+        
+        for col_index, cell in enumerate(row, start=1):  # 식별번호 열 추가
+            new_cell = existing_ws.cell(row=current_max_identifier, column=col_index+1)
             new_cell.value = cell.value if cell.value is not None else ""
             copy_cell_styles(cell, new_cell)
 
