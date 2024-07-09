@@ -41,7 +41,7 @@ def process_and_update_excel(existing_file_path, new_file_path):
     expected_headers = ['총판', '대행사', '셀러', '메인 키워드', '서브 키워드', '상품 URL', 'MID값', '원부 URL', '원부 MID값', '시작일', '종료일', '유입수']
     
     # 헤더 검증
-    headers = [cell.value for cell in new_ws[1]]
+    headers = [cell.value if cell.value is not None else '' for cell in new_ws[1]]
     if headers != expected_headers:
         return False, "올바른 형식의 파일이 아닙니다."
 
