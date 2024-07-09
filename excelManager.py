@@ -50,6 +50,7 @@ def process_and_update_excel(existing_file_path, new_file_path):
 
     # Get current max identifier
     current_max_identifier = existing_ws.max_row
+    print(f"Current max identifier: {current_max_identifier}")
 
     # Copy new data to existing sheet
     for row in new_ws.iter_rows(min_row=2, values_only=False):
@@ -61,6 +62,8 @@ def process_and_update_excel(existing_file_path, new_file_path):
             new_cell = existing_ws.cell(row=current_max_identifier, column=col_index+1)
             new_cell.value = cell.value if cell.value is not None else ""
             copy_cell_styles(cell, new_cell)
+        
+        print(f"Row {current_max_identifier} added with values {[cell.value for cell in row]}")
 
         # 식별번호 추가
         existing_ws.cell(row=current_max_identifier, column=1).value = current_max_identifier
