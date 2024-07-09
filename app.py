@@ -4,8 +4,10 @@ from proxy import get_shuffled_proxies
 from scheduler import start_scheduler
 import excelManager
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/get_product', methods=['GET'])
 def serve_product():
