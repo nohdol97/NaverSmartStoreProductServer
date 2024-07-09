@@ -13,8 +13,8 @@ def start_scheduler():
     # 22시 00분에 data.xlsx 파일 다운로드
     schedule.every().day.at("22:00").do(download_file_from_firebase, 'data.xlsx')
     
-    # 23시 40분에 get_product 실행
-    schedule.every().day.at("23:40").do(get_product)
+    # 23시 00분에 get_product 실행
+    schedule.every().day.at("23:00").do(get_product)
     
     scheduler_thread = Thread(target=run_scheduler)
     scheduler_thread.start()
