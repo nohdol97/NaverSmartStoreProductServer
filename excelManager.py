@@ -47,12 +47,13 @@ def process_and_update_excel(existing_file_path, new_file_path):
         if row[0].value == 'Example':
             continue
         current_max_identifier += 1
-        new_row = [current_max_identifier] + [cell.value for cell in row]
-        
-        for col_index, cell in enumerate(new_row, start=1):
+        for col_index, cell in enumerate(row, start=2):  # 식별번호 열을 제외하고 시작
             new_cell = existing_ws.cell(row=current_max_identifier, column=col_index)
-            new_cell.value = cell
-            copy_cell_styles(row[col_index - 1], new_cell)
+            new_cell.value = cell.value
+            copy_cell_styles(cell, new_cell)
+
+        # 식별번호 추가
+        existing_ws.cell(row=current_max_identifier, column=1).value = current_max_identifier
 
     existing_wb.save(existing_file_path)
     return True, "파일이 성공적으로 업로드되었습니다."
