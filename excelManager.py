@@ -68,7 +68,7 @@ def process_and_update_excel(existing_file_path, new_file_path):
     for row_index, row in enumerate(valid_existing_rows, start=2):
         for col_index, cell in enumerate(row, start=1):
             new_cell = existing_ws.cell(row=row_index, column=col_index)
-            new_cell.value = cell.value if cell.value is not None else None
+            new_cell.value = cell.value if cell.value is not None else " "
             copy_cell_styles(cell, new_cell)
 
     # 새로운 데이터 추가
@@ -78,7 +78,7 @@ def process_and_update_excel(existing_file_path, new_file_path):
         current_max_identifier += 1
         for col_index, cell in enumerate(row, start=1):  # 식별번호 열 추가
             new_cell = existing_ws.cell(row=current_max_identifier, column=col_index+1)
-            new_cell.value = cell.value if cell.value is not None else None
+            new_cell.value = cell.value if cell.value is not None else " "
             copy_cell_styles(cell, new_cell)
         
         print(f"Row {current_max_identifier} added with values {[cell.value for cell in row]}")
