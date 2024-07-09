@@ -32,7 +32,7 @@ def process_and_update_excel(existing_file_path, new_file_path):
     new_ws = new_wb.active
 
     # 검증된 헤더 목록
-    expected_headers = ['식별번호', '총판', '대행사', '셀러', '메인 키워드', '서브 키워드', '상품 URL', 'MID값', '원부 URL', '원부 MID값', '시작일', '종료일', '유입수']
+    expected_headers = ['총판', '대행사', '셀러', '메인 키워드', '서브 키워드', '상품 URL', 'MID값', '원부 URL', '원부 MID값', '시작일', '종료일', '유입수']
     
     # 헤더 검증
     headers = [cell.value for cell in new_ws[1]]
