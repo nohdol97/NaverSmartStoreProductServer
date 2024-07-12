@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime, timedelta
-import os, random
+import os
 
 def get_product():
     # 현재 작업 디렉토리 경로 가져오기
@@ -37,10 +37,8 @@ def get_product():
 
     print(f"File created at: {output_file}")
 
-def get_requested_products():
+def get_requested_products(unit, requested_amount):
     output_file = 'product.txt'
-    products = []
-
     # Debugging: 파일 읽기 확인
     print(f"Reading from {output_file}")
 
@@ -48,42 +46,58 @@ def get_requested_products():
         with open(output_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
+        product_dict = {}
+
         for line in lines:
             parts = line.strip().split(',')
             if len(parts) == 3:
                 mid, keyword, count = parts
-                products.append([mid, keyword, int(count)])
+                key = (mid, None)
+                if key not in product_dict:
+                    product_dict[key] = [mid, keyword, int(count)]
+                else:
+                    product_dict[key][-1] += int(count)
             elif len(parts) == 4:
                 mid, sub_mid, keyword, count = parts
-                products.append([mid, sub_mid, keyword, int(count)])
-        
-        high_priority = [p for p in products if p[-1] >= 250]
-        
-        result = []
+                key = (mid, sub_mid)
+                if key not in product_dict:
+                    product_dict[key] = [mid, sub_mid, keyword, int(count)]
+                else:
+                    product_dict[key][-1] += int(count)
 
-        if len(high_priority) >= 3:
-            selected_products = random.sample(high_priority, 3)
-            for product in selected_products:
-                result.append(product[:-1] + [250])
-                product[-1] -= 250
-        else:
-            total_sum = sum(p[-1] for p in high_priority)
-            if total_sum >= 750:
-                count = 0
-                for product in high_priority:
-                    if count < 750:
-                        take_amount = min(750 - count, product[-1])
-                        result.append(product[:-1] + [take_amount])
-                        product[-1] -= take_amount
-                        count += take_amount
-            else:
-                for product in high_priority:
-                    result.append(product[:-1] + [product[-1]])
-                    product[-1] = 0
+        result = []
+        total_count = 0
+
+        while total_count < requested_amount and product_dict:
+            for key in list(product_dict.keys()):
+                if total_count >= requested_amount:
+                    break
+                product = product_dict[key]
+                if product[-1] > 0:
+                    take_amount = min(unit, product[-1], requested_amount - total_count)
+
+                    added = False
+                    for res in result:
+                        if res[0] == product[0] and (len(res) == 3 or (len(res) == 4 and res[1] == product[1])):
+                            res[-1] += take_amount
+                            added = True
+                            break
+
+                    if not added:
+                        if len(product) == 4:
+                            result.append([product[0], product[1], product[2], take_amount])
+                        else:
+                            result.append([product[0], product[1], take_amount])
+
+                    product[-1] -= take_amount
+                    total_count += take_amount
+
+                    if product[-1] == 0:
+                        del product_dict[key]
 
         # product.txt 업데이트
         with open(output_file, 'w', encoding='utf-8') as file:
-            for product in products:
+            for key, product in product_dict.items():
                 if len(product) == 4:
                     file.write(f"{product[0]},{product[1]},{product[2]},{product[3]}\n")
                 else:

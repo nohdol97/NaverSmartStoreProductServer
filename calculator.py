@@ -30,13 +30,12 @@ def get_filtered_data():
 
 def calculate_requests(df):
     total_inbound_count = df['유입수'].sum()
-    requests_count = int(np.ceil(total_inbound_count / 750))
-    return requests_count
+    return total_inbound_count
 
 def calculate():
     filtered_df = get_filtered_data()
     total_requests = calculate_requests(filtered_df)
-    print(f"필요한 서버 수: {total_requests}")
+    print(f"총 필요 유입수: {total_requests}")
 
 if __name__ == "__main__":
     calculate()

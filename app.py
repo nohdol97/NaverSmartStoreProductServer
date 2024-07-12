@@ -10,7 +10,9 @@ CORS(app)
 @app.route('/get_product', methods=['GET'])
 def serve_product():
     try:
-        response = get_requested_products()
+        amount = request.args.get('amount', default=4000, type=int)
+        unit = request.args.get('unit', default=100, type=int)
+        response = get_requested_products(amount, unit)
         return jsonify(response)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
