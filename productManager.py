@@ -37,7 +37,7 @@ def get_product():
 
     print(f"File created at: {output_file}")
 
-def get_requested_products(unit, requested_amount):
+def get_requested_products(requested_amount, unit):
     output_file = 'product.txt'
     # Debugging: 파일 읽기 확인
     print(f"Reading from {output_file}")
