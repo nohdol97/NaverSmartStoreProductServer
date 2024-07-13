@@ -22,9 +22,10 @@ def get_product():
     # 오늘 날짜와 내일 날짜 계산
     today = datetime.now()
     tomorrow = today + timedelta(days=1)
+    tomorrow_str = tomorrow.strftime('%Y-%m-%d')
 
     # 내일 날짜가 시작일보다 크고 종료일보다 작거나 같은 경우 필터링
-    filtered_df = df[(df['시작일'] < tomorrow) & (df['종료일'] >= tomorrow)]
+    filtered_df = df[(df['시작일'] < tomorrow_str) & (df['종료일'] >= tomorrow_str)]
 
     # 필터링된 데이터를 지정된 형식으로 product.txt 파일에 작성
     with open(output_file, 'w', encoding='utf-8') as file:
