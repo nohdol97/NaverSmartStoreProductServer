@@ -22,14 +22,10 @@ def get_filtered_data():
     # 오늘 날짜와 내일 날짜 계산
     today = datetime.now()
     tomorrow = today + timedelta(days=1)
-
-    tomorrow_date = tomorrow.date()
-
-    df['시작일'] = pd.to_datetime(df['시작일']).dt.date
-    df['종료일'] = pd.to_datetime(df['종료일']).dt.date
+    tomorrow_str = tomorrow.strftime('%Y-%m-%d')
 
     # 내일 날짜가 시작일보다 크고 종료일보다 작거나 같은 경우 필터링
-    filtered_df = df[(df['시작일'] < tomorrow_date) & (df['종료일'] >= tomorrow_date)]
+    filtered_df = df[(df['시작일'] < tomorrow_str) & (df['종료일'] >= tomorrow_str)]
 
     return filtered_df
 
