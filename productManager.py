@@ -114,3 +114,6 @@ def get_requested_products(requested_amount, unit):
     except Exception as e:
         print(f"Error: {e}")
         return {"data": []}
+
+if __name__ == "__main__":
+    get_product()
