@@ -37,6 +37,7 @@ def calculate():
     filtered_df = get_filtered_data()
     total_requests = calculate_requests(filtered_df)
     print(f"총 필요 유입수: {total_requests}")
+    print(f"총 필요 서버수(8100 기준): {total_requests/8100}")
 
 if __name__ == "__main__":
     calculate()
