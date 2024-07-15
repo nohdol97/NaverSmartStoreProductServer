@@ -1,21 +1,31 @@
-import random
+import os
+import shutil
 
-multiple_count = 10
+def initialize_ip_file():
+    if not os.path.exists('Ip.txt') or os.path.getsize('Ip.txt') == 0:
+        if os.path.exists('proxyIp.txt'):
+            shutil.copy('proxyIp.txt', 'Ip.txt')
+        else:
+            raise FileNotFoundError('proxyIp.txt 파일이 존재하지 않습니다.')
 
-def get_shuffled_proxies():
-    try:
-        with open('proxyIp.txt', 'r', encoding='utf-8') as file:
-            proxies = file.readlines()
-        
-        proxies = [proxy.strip() for proxy in proxies]
-        
-        # 각각 셔플한 리스트를 모아서 10배로 확장
-        shuffled_proxies = []
-        for _ in range(10):
-            temp_proxies = proxies.copy()
-            random.shuffle(temp_proxies)
-            shuffled_proxies.extend(temp_proxies)
-        
-        return shuffled_proxies
-    except Exception as e:
-        raise e
+def get_requested_proxies():
+    initialize_ip_file()
+
+    with open('Ip.txt', 'r', encoding='utf-8') as file:
+        lines = [line.strip().replace(' ', '') for line in file if line.strip()]
+
+    if len(lines) == 0:
+        initialize_ip_file()
+        with open('Ip.txt', 'r', encoding='utf-8') as file:
+            lines = [line.strip().replace(' ', '') for line in file if line.strip()]
+
+    requested_proxies = lines[:10]
+    remaining_lines = lines[10:]
+
+    with open('Ip.txt', 'w', encoding='utf-8') as file:
+        file.writelines([line + '\n' for line in remaining_lines])
+
+    extended_proxies = requested_proxies * 10
+    return extended_proxies
+
+print(get_requested_proxies())

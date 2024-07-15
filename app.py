@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from productManager import get_requested_products
-from proxy import get_shuffled_proxies
+from proxy import get_requested_proxies
 from scheduler import start_scheduler
 from flask_cors import CORS
 
@@ -20,7 +20,7 @@ def serve_product():
 @app.route('/get_ip', methods=['GET'])
 def get_ip():
     try:
-        proxies = get_shuffled_proxies()
+        proxies = get_requested_proxies()
         return jsonify({"proxies": proxies})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
