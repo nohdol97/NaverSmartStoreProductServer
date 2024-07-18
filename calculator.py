@@ -25,7 +25,7 @@ def get_filtered_data():
     tomorrow_str = tomorrow.strftime('%Y-%m-%d')
 
     # 내일 날짜가 시작일보다 크고 종료일보다 작거나 같은 경우 필터링
-    filtered_df = df[(df['시작일'] < tomorrow_str) & (df['종료일'] >= tomorrow_str)]
+    filtered_df = df[(df['시작일'] <= tomorrow_str) & (df['종료일'] >= tomorrow_str)]
 
     return filtered_df
 
