@@ -3,6 +3,7 @@ from productManager import get_requested_products
 from proxy import get_requested_proxies
 from scheduler import start_scheduler
 from flask_cors import CORS
+from waitTimes import calculate_wait_time
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +14,8 @@ def serve_product():
         amount = request.args.get('amount', default=4000, type=int)
         unit = request.args.get('unit', default=100, type=int)
         response = get_requested_products(amount, unit)
+        waitTimes = calculate_wait_time(amount)
+        response['waitTimes'] = waitTimes
         return jsonify(response)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
