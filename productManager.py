@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime, timedelta
-import os
+import os, random
 
 def get_product():
     # 현재 작업 디렉토리 경로 가져오기
@@ -46,6 +46,8 @@ def get_requested_products(requested_amount, unit):
     try:
         with open(output_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
+
+        random.shuffle(lines)
 
         product_dict = {}
 
