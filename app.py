@@ -27,6 +27,21 @@ def get_ip():
         return jsonify({"proxies": proxies})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/get_id', methods=['GET'])
+def get_id():
+    try:
+        # 파일 내용을 읽어서 리스트로 저장
+        with open('id.txt', 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+        
+        # 각 줄을 쉼표로 분리하여 딕셔너리로 변환
+        data = [line.strip().split(',') for line in lines]
+        id_data = [{"id": item[0], "password": item[1]} for item in data]
+
+        return jsonify({"id_data": id_data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     stop_event, scheduler_thread = start_scheduler()

@@ -14,9 +14,16 @@ firebase_admin.initialize_app(cred, {
 })
 
 def download_file_from_firebase(file_name):
-    bucket = storage.bucket()
-    blob = bucket.blob(file_name)
-    output_file = os.path.join(current_directory, file_name)
+    try:
+        bucket = storage.bucket()
+        blob = bucket.blob(file_name)
+        output_file = os.path.join(current_directory, file_name)
 
-    blob.download_to_filename(output_file)
-    print(f"File downloaded to {output_file}")
+        if not blob.exists():
+            print(f"File {file_name} does not exist in Firebase Storage.")
+            return
+
+        blob.download_to_filename(output_file)
+        print(f"File downloaded to {output_file}")
+    except Exception as e:
+        print(f"Exception in download_file_from_firebase: {e}")
