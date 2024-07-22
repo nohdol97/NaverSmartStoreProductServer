@@ -149,4 +149,4 @@ def get_products_for_id():
         return {"data": []}
 
 if __name__ == "__main__":
-    get_product()
+    get_product('product.txt')
