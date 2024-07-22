@@ -20,6 +20,22 @@ def serve_product():
         return jsonify(response)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/get_product_for_id', methods=['GET'])
+def serve_product_for_id():
+    try:
+        response = get_products_for_id()
+        return jsonify(response)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    stop_event, scheduler_thread = start_scheduler()
+    app.run(host='0.0.0.0', port=5000)
+
+    # 스케줄러를 안전하게 종료할 수 있도록 보장
+    stop_event.set()
+    scheduler_thread.join()
 
 @app.route('/get_ip', methods=['GET'])
 def get_ip():
@@ -47,19 +63,3 @@ def get_id():
         return jsonify({"id_data": id_data})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-@app.route('/get_product_for_id', methods=['GET'])
-def serve_product():
-    try:
-        response = get_products_for_id()
-        return jsonify(response)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    stop_event, scheduler_thread = start_scheduler()
-    app.run(host='0.0.0.0', port=5000)
-
-    # 스케줄러를 안전하게 종료할 수 있도록 보장
-    stop_event.set()
-    scheduler_thread.join()
