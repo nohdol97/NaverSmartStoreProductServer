@@ -19,7 +19,8 @@ def run_scheduler(stop_event):
         # 23:30:00에 get_product 실행
         if now.hour == 23 and now.minute == 30 and now.second == 0:
             try:
-                get_product()
+                get_product('product.txt')
+                get_product('product_for_id.txt')
             except Exception as e:
                 print(f"Exception in get_product: {e}")
             time.sleep(1)  # 1초 대기하여 중복 실행 방지

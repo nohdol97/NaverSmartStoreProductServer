@@ -2,13 +2,13 @@ import pandas as pd
 from datetime import datetime, timedelta
 import os, random
 
-def get_product():
+def get_product(file_name):
     # 현재 작업 디렉토리 경로 가져오기
     current_directory = os.getcwd()
     
     # 파일 경로 설정
     file_path = os.path.join(current_directory, 'data.xlsx')
-    output_file = os.path.join(current_directory, 'product.txt')
+    output_file = os.path.join(current_directory, file_name)
 
     # Excel 파일 읽기
     df = pd.read_excel(file_path)
@@ -105,6 +105,37 @@ def get_requested_products(requested_amount, unit):
                     file.write(f"{product[0]},{product[1]},{product[2]},{product[3]}\n")
                 else:
                     file.write(f"{product[0]},{product[1]},{product[2]}\n")
+
+        # Debugging: 결과 확인
+        print(f"Result: {result}")
+
+        if not result:
+            return {"data": []}
+        else:
+            return {"data": result}
+    except Exception as e:
+        print(f"Error: {e}")
+        return {"data": []}
+    
+def get_products_for_id():
+    output_file = 'product_for_id.txt'
+
+    # Debugging: 파일 읽기 확인
+    print(f"Reading from {output_file}")
+
+    try:
+        result = []
+        with open(output_file, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+
+        random.shuffle(lines)
+
+        for line in lines:
+            parts = line.strip().split(',')
+            if len(parts) == 4:
+                result.append([parts[0], parts[1], parts[2]])
+            else:
+                result.append([parts[0], parts[1]])
 
         # Debugging: 결과 확인
         print(f"Result: {result}")

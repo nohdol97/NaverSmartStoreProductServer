@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from productManager import get_requested_products
+from productManager import get_products_for_id
 from proxy import get_requested_proxies
 from scheduler import start_scheduler
 from flask_cors import CORS
@@ -39,7 +40,19 @@ def get_id():
         data = [line.strip().split(',') for line in lines]
         id_data = [{"id": item[0], "password": item[1]} for item in data]
 
+        with open('id.txt', 'w', encoding='utf-8') as file:
+            # 파일 내용을 비웁니다.
+            file.write('')
+
         return jsonify({"id_data": id_data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/get_product_for_id', methods=['GET'])
+def serve_product():
+    try:
+        response = get_products_for_id()
+        return jsonify(response)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
